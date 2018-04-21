@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+  <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>    
+      <!--Load the AJAX API-->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+function drawOverviewChart()
+{
+
+        // Create the data table.
+        var dataOverview = new google.visualization.DataTable();
+        dataOverview.addColumn('string', 'ColumnB');
+        dataOverview.addColumn('number', 'ColumnA');
+        dataOverview.addRows([
+          ['Positive', 3],
+          ['Negative', 1],
+          ['Other', 1]
+        ]);
+
+        // Set chart options
+        var optionsOverview = {'title':"Overview of restaurant",
+                       'width':300,
+                       'height':300};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chartOverview = new google.visualization.PieChart(document.getElementById('chart_div_overview'));
+        chartOverview.draw(dataOverview, optionsOverview);
+} 
+function drawPositiveChart()
+{
+
+        // Create the data table.
+        var dataPositive = new google.visualization.DataTable();
+        dataPositive.addColumn('string', 'ColumnB');
+        dataPositive.addColumn('number', 'ColumnA');
+        dataPositive.addRows([
+          ['Yelp', 3],
+          ['Social Media', 1],
+          ['Tripadvisor', 1],
+          ['Other Sources', 1]
+        ]);
+
+        // Set chart options
+        var optionsPositive = {'title':"Positive Reviews",
+                       'width':300,
+                       'height':300};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chartPositive = new google.visualization.PieChart(document.getElementById('chart_div_positive'));
+        chartPositive.draw(dataPositive, optionsPositive);
+}
+
+function drawNegativeChart()
+{
+
+        // Create the data table.
+        var dataNegative = new google.visualization.DataTable();
+        dataNegative.addColumn('string', 'ColumnB');
+        dataNegative.addColumn('number', 'ColumnA');
+        dataNegative.addRows([
+          ['Social Media', 3],
+          ['Yelp', 1],
+          ['Other Sources', 1],
+          ['Tripadvisor', 1]
+        ]);
+
+        // Set chart options
+        var optionsNegative = {'title':"Negative Reviews",
+                       'width':300,
+                       'height':300};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chartNegative = new google.visualization.PieChart(document.getElementById('chart_div_negative'));
+        chartNegative.draw(dataNegative, optionsNegative);
+} 
+
+var search = function() {
+  var username = document.getElementById('username').value;
+  //alert(username);
+  document.querySelector('#myNavigator').pushPage('results.html', {data: {title: 'Page 2'}});
+};
+
+function openChart(item)
+{
+		//google.charts.load('current', {'packages':['corechart']});		
+		//google.charts.setOnLoadCallback(drawNegativeChart);
+		//google.charts.setOnLoadCallback(drawPositiveChart);		
+		
+	if(item=='overview.html')
+	{
+		document.querySelector('#myNavigator').pushPage(item, {data: {title: 'Page 3'}});	
+		google.charts.load('current', {'packages':['corechart']});		
+		//google.charts.setOnLoadCallback(drawNegativeChart);
+		google.charts.setOnLoadCallback(drawOverviewChart);		
+	}
+	
+	if(item=='positive.html')
+	{
+		document.querySelector('#myNavigator').pushPage(item, {data: {title: 'Page 3'}});
+		google.charts.load('current', {'packages':['corechart']});		
+		//google.charts.setOnLoadCallback(drawNegativeChart);
+		google.charts.setOnLoadCallback(drawPositiveChart);				
+	}
+	if(item=='negative.html')
+	{
+		document.querySelector('#myNavigator').pushPage(item, {data: {title: 'Page 3'}});
+	}		
+}
+</script>
+</head>
+<body>
+<ons-navigator swipeable id="myNavigator" page="home.html"></ons-navigator>
+
+<template id="home.html">
+  <ons-page id="home">
+  <div style="text-align: center; margin-top: 230px;">
+    <p>
+      <ons-input id="username" modifier="underbar" placeholder="Search" float></ons-input>
+	  <ons-button onclick="search()">Search</ons-button>
+    </p>
+  </div>
+</ons-page>
+</template>
+
+<template id="results.html">
+  <ons-page id="results">
+    <ons-toolbar>
+      <div class="left"><ons-back-button>Search</ons-back-button></div>
+      <div class="center">Results</div>
+    </ons-toolbar>
+
+	<ons-list-header>Matching Products</ons-list-header>
+		<ons-list-item item-name="" tappable onClick="openChart('overview.html');">
+		  <div class="left">
+			<img class="list-item__thumbnail" src="https://placekitten.com/g/40/40">
+		  </div>
+		  <div class="center">
+			<span class="list-item__title">Cutest kitty</span><span class="list-item__subtitle">On the Internet</span>
+		  </div>
+		</ons-list-item>
+	
+  </ons-page>
+</template>
+
+<template id="positive.html">
+  <ons-page id="positive">
+    <ons-toolbar>
+      <div class="left"><ons-back-button>Results</ons-back-button></div>
+      <div class="center">Analysis</div>
+    </ons-toolbar>	
+	<div id="content">
+		<div id="chart_div_positive" style="margin:auto;"></div>
+	</div>
+  </ons-page>
+</template>
+
+<template id="overview.html">
+  <ons-page id="overview">
+    <ons-toolbar>
+      <div class="left"><ons-back-button>Results</ons-back-button></div>
+      <div class="center">Product Analysis</div>
+    </ons-toolbar>	
+	<div id="content">
+		<div id="chart_div_overview" style="margin:auto;"></div>
+		<section style="padding: 8px">
+			<ons-button modifier="quiet" onClick="openChart('positive.html')">Explore Positive Reviews</ons-button>
+			<br>
+			<ons-button modifier="quiet" onClick="openChart('negative.html')">Explore Negative Reviews</ons-button>
+		</section>
+	</div>
+  </ons-page>
+</template>
+
+
+<template id="negative.html">
+  <ons-page id="negative">
+    <ons-toolbar>
+      <div class="left"><ons-back-button>Results</ons-back-button></div>
+      <div class="center">Analysis</div>
+    </ons-toolbar>	
+	<div id="content">
+		<div id="chart_div_negative" style="margin:auto;"></div>
+	</div>
+  </ons-page>
+</template>
+</body>
+</html>
